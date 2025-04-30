@@ -1,76 +1,71 @@
 ﻿@page
 @model Blog_System.Pages.Posts.CreateModel
-
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create New Post";
 }
 
-<h1>Create</h1>
+<div class="container mt-5">
+    <h2 class="mb-4">Create New Blog</h2>
 
-<h4>Post</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
+    <form style="margin-bottom: 30px; margin-top: -10px" method="post" class="needs-validation" novalidate>
+        <div asp-validation-summary="All" class="alert alert-danger"></div>
 
-            <div class="form-group">
-                <label asp-for="Post.Title" class="control-label"></label>
-                <input asp-for="Post.Title" class="form-control" />
-                <span asp-validation-for="Post.Title" class="text-danger"></span>
-            </div>
+        <div class="mb-3">
+            <label asp-for="Post.Title" class="form-label"></label>
+            <input asp-for="Post.Title" class="form-control" />
+            <span asp-validation-for="Post.Title" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Post.Content" class="control-label"></label>
-                <input asp-for="Post.Content" class="form-control" />
-                <span asp-validation-for="Post.Content" class="text-danger"></span>
-            </div>
+        <div class="mb-3">
+            <label asp-for="Post.Content" class="form-label"></label>
+            <textarea asp-for="Post.Content" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Post.Content" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Post.Description" class="control-label"></label>
-                <input asp-for="Post.Description" class="form-control" />
-                <span asp-validation-for="Post.Description" class="text-danger"></span>
-            </div>
+        <div class="mb-3">
+            <label asp-for="Post.Description" class="form-label"></label>
+            <textarea asp-for="Post.Description" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Post.Description" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Post.Status" class="control-label"></label>
-                <input asp-for="Post.Status" class="form-control" />
-                <span asp-validation-for="Post.Status" class="text-danger"></span>
-            </div>
+        <div class="mb-3">
+            <label asp-for="Post.Status" class="form-label"></label>
+            <select asp-for="Post.Status" class="form-select">
+                <option value="true">Active</option>
+                <option value="false">Inactive</option>
+            </select>
+            <span asp-validation-for="Post.Status" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Post.CreatedAt" class="control-label"></label>
-                <input asp-for="Post.CreatedAt" class="form-control" />
-                <span asp-validation-for="Post.CreatedAt" class="text-danger"></span>
-            </div>
+        <div class="mb-3">
+            <label asp-for="Post.CreatedAt" class="form-label"></label>
+            <input asp-for="Post.CreatedAt" type="datetime-local" class="form-control" />
+            <span asp-validation-for="Post.CreatedAt" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Post.LastUpdatedAt" class="control-label"></label>
-                <input asp-for="Post.LastUpdatedAt" class="form-control" />
-                <span asp-validation-for="Post.LastUpdatedAt" class="text-danger"></span>
-            </div>
+        <div class="mb-3">
+            <label asp-for="Post.LastUpdatedAt" class="form-label"></label>
+            <input asp-for="Post.LastUpdatedAt" type="datetime-local" class="form-control" />
+            <span asp-validation-for="Post.LastUpdatedAt" class="text-danger"></span>
+        </div>
 
-             <div class="form-group">
-                <label asp-for="Post.CommentId" class="control-label"></label>
-                <input asp-for="Post.CommentId" class="form-control" />
-                <span asp-validation-for="Post.CommentId" class="text-danger"></span>
-            </div>
+        <div class="mb-3">
+            <label asp-for="Post.CommentId" class="form-label"></label>
+            <input asp-for="Post.CommentId" class="form-control" />
+            <span asp-validation-for="Post.CommentId" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Post.CategoryId" class="control-label"></label>
-                <input asp-for="Post.CategoryId" class="form-control" />
-                <span asp-validation-for="Post.CategoryId" class="text-danger"></span>
-            </div>
+        <div class="mb-3">
+            <label asp-for="Post.CategoryId" class="form-label"></label>
+            <input asp-for="Post.CategoryId" class="form-control" />
+            <span asp-validation-for="Post.CategoryId" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-page="Index">Back to List</a>
+        <div class="d-flex justify-content-between">
+            <a asp-page="Index" class="btn btn-outline-secondary">Back to List</a>
+            <button type="submit" class="btn btn-primary">Create Post</button>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
