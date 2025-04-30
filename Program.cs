@@ -1,13 +1,20 @@
 using Blog_System.AppData;
+using Blog_System.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
+// Database connection
+var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection")
+    ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
 
 // Database connection
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-options.UseSqlServer(builder.Configuration.GetSection
-("ApplicationDbContext")["ConnStr"] ?? throw new InvalidOperationException("Connection string not found.")));
+    options.UseSqlServer(connectionString));
+
+
+builder.Services.AddDefaultIdentity<Users>(options => options.SignIn.RequireConfirmedAccount = false).AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddRazorPages();
 var app = builder.Build();
