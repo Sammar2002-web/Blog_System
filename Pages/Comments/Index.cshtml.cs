@@ -19,7 +19,7 @@ namespace Blog_System.Pages.Comments
             _context = context;
         }
 
-        public IList<Comment> Comment { get;set; } = default!;
+        public IList<Comment> Comment { get;set; } = new List<Comment>();
 
         public async Task OnGetAsync()
         {

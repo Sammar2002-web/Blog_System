@@ -5,63 +5,57 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1 class="mb-4">Post Details</h1>
 
-<div>
-    <h4>Post</h4>
-    <hr />
+<div class="card p-4 shadow-sm mb-4">
+    <h4 class="mb-3">Post Information</h4>
     <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Post.Title)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Post.Title)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Post.Content)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Post.Content)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Post.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Post.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Post.Status)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Post.Status)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Post.CreatedAt)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Post.CreatedAt)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Post.LastUpdatedAt)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Post.LastUpdatedAt)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Post.Comment)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Post.Comment.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Post.Category)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Post.Category.Id)
-        </dd>
+        <dt class="col-sm-3">Title</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Post.Title)</dd>
+
+        <dt class="col-sm-3">Content</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Post.Content)</dd>
+
+        <dt class="col-sm-3">Description</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Post.Description)</dd>
+
+        <dt class="col-sm-3">Status</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Post.Status)</dd>
+
+        <dt class="col-sm-3">Created At</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Post.CreatedAt)</dd>
+
+        <dt class="col-sm-3">Last Updated At</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Post.LastUpdatedAt)</dd>
+
+        <dt class="col-sm-3">Category ID</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Post.Category.Id)</dd>
     </dl>
 </div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Post.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+
+<div class="card p-4 shadow-sm mb-4">
+    <h4 class="mb-3">Comments</h4>
+
+    @if (Model.Post.Comment != null && Model.Post.Comment.Any())
+    {
+        <ul class="list-group">
+            @foreach (var comment in Model.Post.Comment)
+            {
+                <li class="list-group-item">
+                    <strong>ID:</strong> @comment.Id<br />
+                    <strong>Content:</strong> @comment.Content
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p class="text-muted">No comments available.</p>
+    }
 </div>
+
+<div class="mt-4">
+    <a asp-page="./Edit" asp-route-id="@Model.Post.Id" class="btn btn-primary me-2">Edit</a>
+    <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
+</div>
+
