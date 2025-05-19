@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Blog_System.AppData;
 using Blog_System.Models;
+using Microsoft.Extensions.Hosting;
 
 namespace Blog_System.Pages.Posts
 {
@@ -22,14 +23,9 @@ namespace Blog_System.Pages.Posts
         [BindProperty]
         public Post Post { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var post = await _context.Posts.FirstOrDefaultAsync(m => m.Id == id);
+            var post = await _context.Posts.Include(p => p.Comment).Include(p => p.Category).Include(p => p.PostLikes).FirstOrDefaultAsync(p => p.Id == id);
 
             if (post == null)
             {

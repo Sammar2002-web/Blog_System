@@ -5,59 +5,95 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>Post</h4>
+<h1>Edit Post</h1>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Post.Id" />
+
             <div class="form-group">
                 <label asp-for="Post.Title" class="control-label"></label>
                 <input asp-for="Post.Title" class="form-control" />
                 <span asp-validation-for="Post.Title" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Post.Content" class="control-label"></label>
-                <input asp-for="Post.Content" class="form-control" />
+                <textarea asp-for="Post.Content" class="form-control"></textarea>
                 <span asp-validation-for="Post.Content" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Post.Description" class="control-label"></label>
                 <input asp-for="Post.Description" class="form-control" />
                 <span asp-validation-for="Post.Description" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Post.Status" class="control-label"></label>
                 <input asp-for="Post.Status" class="form-control" />
                 <span asp-validation-for="Post.Status" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Post.CreatedAt" class="control-label"></label>
                 <input asp-for="Post.CreatedAt" class="form-control" />
                 <span asp-validation-for="Post.CreatedAt" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Post.LastUpdatedAt" class="control-label"></label>
                 <input asp-for="Post.LastUpdatedAt" class="form-control" />
                 <span asp-validation-for="Post.LastUpdatedAt" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Post.CommentId" class="control-label"></label>
-                <select asp-for="Post.CommentId" class="form-control" asp-items="ViewBag.CommentId"></select>
-                <span asp-validation-for="Post.CommentId" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="Post.CategoryId" class="control-label"></label>
                 <select asp-for="Post.CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
                 <span asp-validation-for="Post.CategoryId" class="text-danger"></span>
             </div>
+
+            <hr />
+            <h4>Add a Comment</h4>
+
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label for="NewCommentContent" class="control-label">Content</label>
+                <textarea name="NewCommentContent" class="form-control" rows="3" required></textarea>
+                <span class="text-danger" data-valmsg-for="NewCommentContent"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="NewCommentAuthor" class="control-label">Author</label>
+                <input name="NewCommentAuthor" class="form-control" required />
+                <span class="text-danger" data-valmsg-for="NewCommentAuthor"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Save Changes & Add Comment" class="btn btn-primary" />
             </div>
         </form>
+    </div>
+
+    <div class="col-md-6">
+        <h4>Existing Comments</h4>
+        @if (Model.Post.Comment.Any())
+        {
+            <ul class="list-group">
+                @foreach (var comment in Model.Post.Comment)
+                {
+                    <li class="list-group-item">
+                        <strong>@comment.Auther</strong> (@comment.PostedAt.ToShortDateString())<br />
+                        @comment.Content
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>No comments yet.</p>
+        }
     </div>
 </div>
 
@@ -66,5 +102,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

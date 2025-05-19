@@ -17,6 +17,7 @@ namespace Blog_System.AppData
         public DbSet<Category> Categories { get; set; }
         public DbSet<Tags> Tags { get; set; }
         public DbSet<PostTag> postTags { get; set; }
+        public DbSet<PostLike> PostLikes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

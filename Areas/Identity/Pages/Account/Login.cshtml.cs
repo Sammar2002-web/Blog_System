@@ -18,6 +18,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Blog_System.Areas.Identity.Pages.Account
 {
+    [AllowAnonymous]
     public class LoginModel : PageModel
     {
         private readonly SignInManager<Users> _signInManager;

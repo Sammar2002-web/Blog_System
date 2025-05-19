@@ -5,53 +5,155 @@
     ViewData["Title"] = "Blog Posts";
 }
 
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="mb-0">Blog Posts</h1>
         <a class="btn btn-primary" asp-page="Create">+ Create New Post</a>
     </div>
-
-    <div class="table-responsive">
-        <table class="table table-hover table-bordered align-middle text-center">
-            <thead class="table-dark">
-                <tr>
-                    <th>@Html.DisplayNameFor(model => model.Post[0].Title)</th>
-                    <th>@Html.DisplayNameFor(model => model.Post[0].Content)</th>
-                    <th>@Html.DisplayNameFor(model => model.Post[0].Description)</th>
-                    <th>@Html.DisplayNameFor(model => model.Post[0].Status)</th>
-                    <th>@Html.DisplayNameFor(model => model.Post[0].CreatedAt)</th>
-                    <th>@Html.DisplayNameFor(model => model.Post[0].LastUpdatedAt)</th>
-                    <th>@Html.DisplayNameFor(model => model.Post[0].Comment)</th>
-                    <th>@Html.DisplayNameFor(model => model.Post[0].Category)</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Post)
-                {
-                    <tr>
-                        <td>@Html.DisplayFor(modelItem => item.Title)</td>
-                        <td class="text-truncate" style="max-width: 150px;">
-                            @Html.DisplayFor(modelItem => item.Content)
-                        </td>
-                        <td class="text-truncate" style="max-width: 150px;">
-                            @Html.DisplayFor(modelItem => item.Description)
-                        </td>
-                        <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                        <td>@item.CreatedAt?.ToString("yyyy-MM-dd")</td>
-                        <td>@item.LastUpdatedAt?.ToString("yyyy-MM-dd")</td>
-                        <td>@Html.DisplayFor(modelItem => item.Comment.Id)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Category.Id)</td>
-                        <td>
-                            <div class="btn-group" role="group">
-                                <a class="btn btn-sm btn-outline-primary" asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
-                                <a class="btn btn-sm btn-outline-info" asp-page="./Details" asp-route-id="@item.Id">Details</a>
-                                <a class="btn btn-sm btn-outline-danger" asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
 </div>
+
+@foreach (var item in Model.Post)
+{
+    <div class="card mb-4">
+        @{
+            var userId = User?.Identity?.Name;
+            var userHasLiked = item.PostLikes?.Any(l => l.UserId == userId) ?? false;
+            var likeButtonClass = userHasLiked ? "btn-outline-primary" : "btn-outline-secondary";
+            var likeIcon = userHasLiked ? "★" : "☆";
+        }
+
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                    <h5 class="card-title mb-1">@Html.DisplayFor(modelItem => item.Title)</h5>
+                    <small class="text-muted">
+                        @(item.Auther ?? "Unknown Author") ·
+                        @item.CreatedAt?.ToString("MMM d, yyyy") ·
+                        @item.CreatedAt?.ToString("h:mm tt")
+                    </small>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        ⋮
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" asp-page="./Edit" asp-route-id="@item.Id">Edit</a></li>
+                        <li><a class="dropdown-item" asp-page="./Details" asp-route-id="@item.Id">Details</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" asp-page="./Delete" asp-route-id="@item.Id">Delete</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <p class="card-text mt-3">@Html.DisplayFor(modelItem => item.Content)</p>
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div>
+                    <button type="button"
+                            class="btn btn-sm btn-outline-secondary me-2 share-button"
+                            data-title="@item.Title"
+                            data-text="@item.Content"
+                            data-url="@($"{Request.Scheme}://{Request.Host}" + Url.Page("/Posts/Details", new { id = item.Id }))">
+                        🔗 Share
+                    </button>
+
+
+                    <form method="post" asp-page-handler="ToggleLike" asp-route-postId="@item.Id" class="d-inline">
+                        <button type="submit" class="btn btn-sm @likeButtonClass">
+                            @likeIcon @item.LikesCount
+                        </button>
+                    </form>
+                </div>
+                <small class="text-muted">@item.CommentsCount comments</small>
+            </div>
+        </div>
+
+        <div class="card-footer bg-white">
+            @foreach (var comment in item.Comment.OrderByDescending(c => c.PostedAt).Take(3))
+            {
+                <div class="d-flex mb-3">
+                    <div class="flex-shrink-0">
+                        <img src="https://via.placeholder.com/40" class="rounded-circle" width="40" height="40" alt="@comment.Auther's avatar">
+                    </div>
+                    <div class="ms-3">
+                        <small class="fw-bold">@comment.Auther</small>
+                        <p class="mb-1 small">@comment.Content</p>
+                        <small class="text-muted">
+                            @comment.PostedAt.ToString("MMM d, h:mm tt") ·
+                            ☆ @comment.LikeCount
+                        </small>
+                    </div>
+                </div>
+            }
+
+            <form method="post" asp-page-handler="AddComment" asp-route-postId="@item.Id">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control"
+                           placeholder="Add a comment..."
+                           name="commentContent"
+                           required>
+                    <button class="btn btn-outline-primary" type="submit">Post</button>
+                </div>
+            </form>
+
+            @if (item.CommentsCount > 3)
+            {
+                <div class="text-center">
+                    <a asp-page="/Posts/Details" asp-route-id="@item.Id" class="small text-muted">
+                        View all @item.CommentsCount comments
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<style>
+    .card {
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+    }
+
+    .card-footer {
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .card-title {
+        font-weight: 600;
+    }
+
+    .dropdown-toggle::after {
+        display: none;
+    }
+
+    .comment-form {
+        margin-top: 1rem;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const shareButtons = document.querySelectorAll(".share-button");
+
+        shareButtons.forEach(button => {
+            button.addEventListener("click", async () => {
+                const title = button.getAttribute("data-title");
+                const text = button.getAttribute("data-text");
+                const url = button.getAttribute("data-url");
+
+                if (navigator.share) {
+                    try {
+                        await navigator.share({ title, text, url });
+                    } catch (err) {
+                        console.error("Share failed:", err);
+                    }
+                } else {
+                    navigator.clipboard.writeText(url)
+                        .then(() => alert("Link copied to clipboard!"))
+                        .catch(err => console.error("Copy failed:", err));
+                }
+            });
+        });
+    });
+</script>
+
