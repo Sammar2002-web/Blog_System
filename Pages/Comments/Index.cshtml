@@ -23,20 +23,69 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Comment) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PostedAt)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Comment)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PostedAt)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<div aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
+    <div id="toastNotification" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" id="toastBody">
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            connection.on("ReceiveNotification", function (user, message) {
+                showToast(user + ": " + message);
+            });
+        </div>
+    </div>
+</div>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/chathub")
+        .build();
+
+    connection.on("ReceiveNotification", function (user, message) {
+        showToast(user + ": " + message);
+        console.log(user, message);
+    });
+
+        connection.start().then(function () {
+        console.log("SignalR connected");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+        function showToast(message) {
+        console.log("Toast triggered: " + message);
+        const toastBody = document.getElementById('toastBody');
+        toastBody.textContent = message;
+        const toastElement = document.getElementById('toastNotification');
+        const toast = new bootstrap.Toast(toastElement);
+        toast.show();
+    }
+</script>
+<script>
+    const toastMessage = '@Model.ToastMessage';
+    if (toastMessage) {
+        showToast(toastMessage);
+    }
+</script>
+

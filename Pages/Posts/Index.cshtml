@@ -57,7 +57,6 @@
                         🔗 Share
                     </button>
 
-
                     <form method="post" asp-page-handler="ToggleLike" asp-route-postId="@item.Id" class="d-inline">
                         <button type="submit" class="btn btn-sm @likeButtonClass">
                             @likeIcon @item.LikesCount
@@ -73,7 +72,7 @@
             {
                 <div class="d-flex mb-3">
                     <div class="flex-shrink-0">
-                        <img src="https://via.placeholder.com/40" class="rounded-circle" width="40" height="40" alt="@comment.Auther's avatar">
+                        <img src="https://placehold.co/40x40" class="rounded-circle" width="40" height="40" alt="@comment.Auther's avatar">
                     </div>
                     <div class="ms-3">
                         <small class="fw-bold">@comment.Auther</small>
@@ -131,6 +130,26 @@
     }
 </style>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/chathub")
+        .build();
+
+    connection.on("ReceiveMessage", function (user, message) {
+        console.log(user + ": " + message);
+    });
+
+    connection.start().then(function () {
+        // Define user and message for testing
+        const user = '@User.Identity?.Name ?? "Anonymous"';
+        const message = 'Hello from SignalR!';
+        // Only invoke for test/demo purposes
+        // connection.invoke("SendMessage", user, message);
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+</script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const shareButtons = document.querySelectorAll(".share-button");
@@ -156,4 +175,3 @@
         });
     });
 </script>
-
