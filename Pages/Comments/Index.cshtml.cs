@@ -13,13 +13,19 @@ namespace Blog_System.Pages.Comments
     public class IndexModel : PageModel
     {
         private readonly Blog_System.AppData.ApplicationDbContext _context;
+        public string? ToastMessage { get; set; }
 
         public IndexModel(Blog_System.AppData.ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public IList<Comment> Comment { get;set; } = new List<Comment>();
+        public void OnGet()
+        {
+            ToastMessage = TempData["ToastMessage"] as string;
+        }
+
+        public IList<Comment> Comment { get; set; } = new List<Comment>();
 
         public async Task OnGetAsync()
         {
