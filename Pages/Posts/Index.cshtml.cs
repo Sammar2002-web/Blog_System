@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Blog_System.AppData;
 using Blog_System.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Web.Helpers;
 
 namespace Blog_System.Pages.Posts
 {
@@ -56,7 +52,7 @@ namespace Blog_System.Pages.Posts
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToPage();
+            return new JsonResult(new { success = true });
         }
 
         public async Task<IActionResult> OnPostToggleLikeAsync(int postId)

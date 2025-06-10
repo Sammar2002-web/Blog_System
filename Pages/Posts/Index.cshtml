@@ -85,7 +85,7 @@
                 </div>
             }
 
-            <form method="post" asp-page-handler="AddComment" asp-route-postId="@item.Id">
+            <form method="post" asp-page-handler="AddComment" asp-route-postId="@item.Id" data-ajax="true" data-ajax-method="post" data-ajax-complete="completed">
                 <div class="input-group mb-3">
                     <input type="text" class="form-control"
                            placeholder="Add a comment..."
@@ -131,6 +131,11 @@
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+<script>
+    completed = () => {
+        
+    };
+</script>
 <script>
     const connection = new signalR.HubConnectionBuilder()
         .withUrl("/chathub")

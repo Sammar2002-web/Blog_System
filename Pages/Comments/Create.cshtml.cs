@@ -43,8 +43,7 @@ namespace Blog_System.Pages.Comments
             var user = User.Identity?.Name ?? "Anonymous";
             var message = "Comment posted!";
 
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            await _hubContext.Clients.User(userId).SendAsync("ReceiveNotification", user, message);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", user, message);
 
             TempData["ShowToast"] = "true";
             TempData["ToastMessage"] = $"{user}: {message}";
